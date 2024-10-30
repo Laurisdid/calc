@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spell Casting Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        label, select {
+            display: block;
+            margin: 10px 0;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Spell Casting Calculator</h1>
+
+    <!-- Range -->
+    <label for="range">Range</label>
+    <select id="range" onchange="calculateDC()">
+      <option value="0-0">5 ft - 0 EP</option>
+      <option value="2-2">10 ft - 2 EP</option>
+      <option value="4-4">15 ft - 4 EP</option>
+      <option value="6-6">20 ft - 6 EP</option>
+      <option value="8-8">25 ft - 8 EP</option>
+      <option value="10-10">30 ft - 10 EP</option>
+      <option value="12-12">35 ft - 12 EP</option>
+      <option value="14-14">40 ft - 14 EP</option>
+      <option value="16-16">45 ft - 16 EP</option>
+      <option value="18-18">50 ft - 18 EP</option>
+      <option value="20-20">55 ft - 20 EP</option>
+      <option value="22-22">60 ft - 22 EP</option>
+      <option value="24-24">65 ft - 24 EP</option>
+      <option value="26-26">70 ft - 26 EP</option>
+      <option value="28-28">75 ft - 28 EP</option>
+      <option value="30-30">80 ft - 30 EP</option>
+      <option value="32-32">85 ft - 32 EP</option>
+      <option value="34-34">90 ft - 34 EP</option>
+      <option value="36-36">95 ft - 36 EP</option>
+      <option value="38-38">100 ft - 38 EP</option>
+      <option value="40-40">105 ft - 40 EP</option>
+      <option value="42-42">110 ft - 42 EP</option>
+      <option value="44-44">115 ft - 44 EP</option>
+      <option value="46-46">120 ft - 46 EP</option>
+      <option value="48-48">125 ft - 48 EP</option>
+      <option value="50-50">130 ft - 50 EP</option>
+      <option value="52-52">135 ft - 52 EP</option>
+      <option value="54-54">140 ft - 54 EP</option>
+      <option value="56-56">145 ft - 56 EP</option>
+      <option value="58-58">150 ft - 58 EP</option>
+      <option value="60-60">155 ft - 60 EP</option>
+      <option value="62-62">160 ft - 62 EP</option>
+      <option value="64-64">165 ft - 64 EP</option>
+      <option value="66-66">170 ft - 66 EP</option>
+      <option value="68-68">175 ft - 68 EP</option>
+      <option value="70-70">180 ft - 70 EP</option>
+      <option value="72-72">185 ft - 72 EP</option>
+      <option value="74-74">190 ft - 74 EP</option>
+      <option value="76-76">195 ft - 76 EP</option>
+      <option value="78-78">200 ft - 78 EP</option>
+      <option value="80-80">205 ft - 80 EP</option>
+      <option value="82-82">210 ft - 82 EP</option>
+      <option value="84-84">215 ft - 84 EP</option>
+      <option value="86-86">220 ft - 86 EP</option>
+      <option value="88-88">225 ft - 88 EP</option>
+      <option value="90-90">230 ft - 90 EP</option>
+      <option value="92-92">235 ft - 92 EP</option>
+      <option value="94-94">240 ft - 94 EP</option>
+      <option value="96-96">245 ft - 96 EP</option>
+      <option value="98-98">250 ft - 98 EP</option>
+      <option value="100-100">255 ft - 100 EP</option>
+      <option value="102-102">260 ft - 102 EP</option>
+      <option value="104-104">265 ft - 104 EP</option>
+      <option value="106-106">270 ft - 106 EP</option>
+      <option value="108-108">275 ft - 108 EP</option>
+      <option value="110-110">280 ft - 110 EP</option>
+      <option value="112-112">285 ft - 112 EP</option>
+      <option value="114-114">290 ft - 114 EP</option>
+      <option value="116-116">295 ft - 116 EP</option>
+      <option value="118-118">300 ft - 118 EP</option>
+    </select>
+
+    <!-- Shape -->
+    <label for="shape">Shape</label>
+    <select id="shape" onchange="updateShapeRange(); calculateDC()">
+        <option value="0">Direct Cast (no shape)</option>
+        <option value="5">Line - +5 DC (costs 5 EP)</option>
+        <option value="7">Cone - +7 DC (costs 10 EP)</option>
+        <option value="10">Radius Area - +10 DC (costs 15 EP)</option>
+        <option value="12">Ring - +12 DC (costs 20 EP)</option>
+        <option value="15">Dome - +15 DC (costs 25 EP)</option>
+    </select>
+
+    <!-- Shape Range -->
+    <label for="shapeRange">Shape Range</label>
+    <select id="shapeRange" onchange="calculateDC()">
+        <option value="0-0">Select Shape Range</option>
+    </select>
+
+    <!-- Damage Type -->
+    <label for="damageType">Damage Type</label>
+    <select id="damageType" onchange="calculateDC()">
+        <option value="0">Skip Damage</option>
+        <option value="2-5">Release - Tier 1 (2 DC - 5 EP)</option>
+        <option value="4-10">Release - Tier 2 (4 DC - 10 EP)</option>
+        <option value="6-15">Release - Tier 3 (6 DC - 15 EP)</option>
+        <option value="8-20">Release - Tier 4 (8 DC - 20 EP)</option>
+        <option value="2-2">Imbue - Tier 1 (2 DC - 2 EP)</option>
+        <option value="4-8">Imbue - Tier 2 (4 DC - 8 EP)</option>
+        <option value="6-14">Imbue - Tier 3 (6 DC - 14 EP)</option>
+        <option value="8-20">Imbue - Tier 4 (8 DC - 20 EP)</option>
+    </select>
+
+    <!-- Spell Effect -->
+    <label for="spellEffect">Spell Effect</label>
+    <select id="spellEffect" onchange="calculateDC()">
+        <option value="0">None</option>
+        <option value="10">1 Effect (+10 DC)</option>
+        <option value="20">2 Effects (+20 DC)</option>
+        <option value="30">3 Effects (+30 DC)</option>
+    </select>
+
+    <!-- Channel Effect -->
+    <label for="channelEffect">Channel Effect</label>
+    <select id="channelEffect" onchange="calculateDC()">
+        <option value="0">None</option>
+        <option value="0">1 Channel (Activate Effect)</option>
+    </select>
+
+    <!-- Results -->
+    <div class="result">
+        <p>Total DC: <span id="totalDC">8</span></p>
+        <p>Total EP: <span id="totalEP">0</span></p>
+    </div>
+
+    <script>
+        function calculateDC() {
+            // Base DC
+            let totalDC = 8;  // Default base DC
+            let totalEP = 0;  // Total Energy Points
+
+            // Get selected values
+            const range = document.getElementById("range").value.split("-");
+            const shape = document.getElementById("shape").value;
+            const shapeRange = document.getElementById("shapeRange").value;
+            const damageType = document.getElementById("damageType").value;
+            const spellEffect = document.getElementById("spellEffect").value;
+            const channelEffect = document.getElementById("channelEffect").value;
+
+            // Range calculations
+            totalEP += parseInt(range[1]);
+
+            // Shape calculations
+            totalDC += parseInt(shape);
+            if (shapeRange !== "0-0") { // Check if shape range is selected
+                totalEP += parseInt(shapeRange.split("-")[1]);
+            }
+
+            // Damage Type calculations
+            if (damageType !== "0") {
+                totalDC += parseInt(damageType.split("-")[0]);
+                totalEP += parseInt(damageType.split("-")[1]);
+            }
+
+            // Spell Effect calculations
+            totalDC += parseInt(spellEffect);
+
+            // Channel Effect calculations
+            totalDC += parseInt(channelEffect);
+
+            // Display results
+            document.getElementById("totalDC").innerText = totalDC;
+            document.getElementById("totalEP").innerText = totalEP;
+        }
+
+        function updateShapeRange() {
+            const shape = document.getElementById("shape").value;
+            const shapeRangeSelect = document.getElementById("shapeRange");
+
+            // Clear previous options
+            shapeRangeSelect.innerHTML = '<option value="0-0">Select Shape Range</option>';
+
+            // Populate shape range based on the selected shape
+            if (shape === "5") { // Line
+                shapeRangeSelect.innerHTML += `
+                    <option value="20-5">20 ft - 5 EP</option>
+                    <option value="40-10">40 ft - 10 EP</option>
+                    <option value="60-15">60 ft - 15 EP</option>`;
+            } else if (shape === "7") { // Cone
+                shapeRangeSelect.innerHTML += `
+                    <option value="15-10">15 ft - 10 EP</option>
+                    <option value="30-20">30 ft - 20 EP</option>
+                    <option value="45-30">45 ft - 30 EP</option>`;
+            } else if (shape === "10") { // Radius Area
+                shapeRangeSelect.innerHTML += `
+                    <option value="10-15">10 ft - 15 EP</option>
+                    <option value="20-30">20 ft - 30 EP</option>
+                    <option value="30-45">30 ft - 45 EP</option>
+                    <option value="40-60">40 ft - 60 EP</option>`;
+            } else if (shape === "12") { // Ring
+                shapeRangeSelect.innerHTML += `
+                    <option value="15-20">15 ft - 20 EP</option>
+                    <option value="30-40">30 ft - 40 EP</option>`;
+            } else if (shape === "15") { // Dome
+                shapeRangeSelect.innerHTML += `
+                    <option value="10-25">10 ft - 25 EP</option>
+                    <option value="20-50">20 ft - 50 EP</option>`;
+            }
+        }
+
+        // Initialize shape range options
+        updateShapeRange();
+    </script>
+</body>
+</html>
